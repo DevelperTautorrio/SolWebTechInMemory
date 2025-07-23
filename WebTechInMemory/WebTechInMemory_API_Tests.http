@@ -1,0 +1,54 @@
+@WebTechInMemory_HostAddress = http://localhost:5265
+@ContentType = application/json
+@AdminEmail = admin@example.com
+@AdminPassword = P@ssw0rd!
+
+
+
+### Autenticación JWT
+# @name login
+POST {{WebTechInMemory_HostAddress}}/api/auth/login
+Content-Type: {{ContentType}}
+
+{
+  "email": "{{AdminEmail}}",
+  "password": "{{AdminPassword}}"
+}
+
+### Guardar token para siguientes requests
+@authToken = {{login.response.body.token}}
+
+### Obtener todos los usuarios (requiere autenticación)
+# @name getUsers
+GET {{WebTechInMemory_HostAddress}}/api/users
+Authorization: Bearer {{authToken}}
+Accept: {{ContentType}}
+
+### Crear nuevo usuario
+# @name createUser
+POST {{WebTechInMemory_HostAddress}}/api/users
+Content-Type: {{ContentType}}
+Authorization: Bearer {{authToken}}
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "password": "Temp@1234",
+  "nickname": "johndoe"
+}
+
+### Obtener usuario específico
+@userId = {{createUser.response.body.userId}}
+GET {{WebTechInMemory_HostAddress}}/api/users/{{userId}}
+Authorization: Bearer {{authToken}}
+Accept: {{ContentType}}
+
+### Actualizar biografía de perfil
+PATCH {{WebTechInMemory_HostAddress}}/api/profiles/{{userId}}/bio
+Content-Type: {{ContentType}}
+Authorization: Bearer {{authToken}}
+
+{
+  "biography": "Desarrollador full-stack con experiencia en .NET y React"
+}
