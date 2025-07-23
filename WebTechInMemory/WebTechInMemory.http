@@ -1,0 +1,6 @@
+@WebTechInMemory_HostAddress = http://localhost:5265
+
+GET {{WebTechInMemory_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
